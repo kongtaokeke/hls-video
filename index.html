@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HLS视频播放器</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #1a1a1a; 
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        h1 { margin-bottom: 20px; font-size: 1.5rem; }
+        .player-container {
+            width: 100%;
+            max-width: 800px;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        video { width: 100%; display: block; }
+        .info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #2a2a2a;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 800px;
+        }
+        .info p { margin: 5px 0; font-size: 0.9rem; color: #aaa; }
+    </style>
+</head>
+<body>
+    <h1>🎬 HLS视频播放器</h1>
+    <div class="player-container">
+        <video id="video" controls></video>
+    </div>
+    <div class="info">
+        <p><strong>切片数:</strong> 83个TS文件</p>
+        <p><strong>每个切片:</strong> 约300-600KB</p>
+    </div>
+    <script>
+        const video = document.getElementById('video');
+        const playlistUrl = 'output.m3u8';
+        
+        if (Hls.isSupported()) {
+            const hls = new Hls();
+            hls.loadSource(playlistUrl);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            video.src = playlistUrl;
+        }
+    </script>
+</body>
+</html>
